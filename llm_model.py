@@ -14,7 +14,7 @@ os.environ["GOOGLE_API_KEY"]=st.secrets["GOOGLE_API_KEY"]
 
  
 
-def llm_data(value_list,text,Employee_Name):
+def llm_data(value_list,text,Employee_Name,total):
    
     if text =="":
         insights="Data not Found"
@@ -24,7 +24,8 @@ def llm_data(value_list,text,Employee_Name):
         inputs = {
         "Area of improvement": " Analyze the performance of a specific employee {Employee_Name} and identify areas for improvement in 4 or 5 points.Only provide areas of imrovement  points.  ",
         "Strength and Weakness": " Write 4 strengths and 4 weaknesses of {Employee_Name} in heading points only. If there are no strengths or weaknesses then write 'There are no Strengths worth mentioning' or 'There are no Weaknesses worth mentioning' respectively.",
-        "Sentiment": "Process Sentiment Analysis by classifying each review as positive, negative, or neutral. After analyzing each review, provide counts for each classification. For example, 'Positive Review':3 'Negative Review':2 'Neutral Review':6.Don't Add any Description",
+        "Sentiment": "Given a list of reviews enclosed within parentheses `( )`, Although each set of parentheses contains multiple individual questions, treat each set as a single review for processing. Classify each review into positive, negative, and neutral categories.Finally, provide the count for each category and ensure the total sum of count of all the categories DOES NOT EXCEED {total}.If there is no review for any categorie just write 0",
+                       
         
         "Employee Performance Matrix":"Provide information for each heading in about 30 words , based on {Employee_Name}'s performance data:"
                                         "'Work Efficiency:' Rate of task completion."
@@ -53,7 +54,7 @@ def llm_data(value_list,text,Employee_Name):
         # # print(final_prompt)
         # llm=OpenAI(temperature=0)
         
-        llm = ChatGoogleGenerativeAI(model="gemini-pro")
+        llm = ChatGoogleGenerativeAI(model="gemini-pro",temperature=0)
        
         insights=""
         prompt_template1=PromptTemplate(
@@ -61,7 +62,7 @@ def llm_data(value_list,text,Employee_Name):
             template=final_prompt
         )
         chain=LLMChain(llm=llm,prompt=prompt_template1)
-        insights+=chain.run({"text":text,"Employee_Name":Employee_Name})
+        insights+=chain.run({"text":text,"Employee_Name":Employee_Name,"total":total})
         # print(insights)
         return insights
        

@@ -33,8 +33,8 @@ def get_data(Employee_name,review_type,start_year,end_year,sorted_value_list):
     elif(review_type=="Self_Reviews"):
         text=data_text_Self(Employee_name,start_year,end_year)
         Count_Reviews=data_text_Self_count(Employee_name,start_year,end_year)
-       
-    summary=llm_data(sorted_value_list,text,Employee_name)
+    total = sum(val if isinstance(val, int) else sum(val) for val in Count_Reviews.values())
+    summary=llm_data(sorted_value_list,text,Employee_name,total)
     
     
     insight="\n\n"
