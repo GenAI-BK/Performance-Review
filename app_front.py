@@ -1,7 +1,7 @@
 
 import app
 import streamlit as st
-
+from dataBase import fetch_review_data
 from datetime import datetime
 
 
@@ -17,7 +17,14 @@ from datetime import datetime
 def main():
     st.title("Employee Review App")
      # Input field for the employee's name
-    Employee_name = st.text_input("Enter employee's name:")
+    # Employee_name = st.text_input("Enter employee's name:")
+    all_reviewees = fetch_review_data()
+
+    # Create a dropdown with reviewee names
+    Employee_name = st.selectbox("Select employee's name:", sorted(all_reviewees))
+
+    # Show the selected reviewee
+    # st.write("Selected employee's name:", selected_reviewee)
    
     # Dropdown menu for selecting review type
     review_type = st.selectbox("Select review type", ["Overall", "Manager_Reviews", "Coworker_Reviews", "Subordinate_Reviews", "Self_Reviews"])
@@ -25,12 +32,12 @@ def main():
    
     # Dynamically generate range for selecting start year and end year
     current_year = datetime.now().year
-    start_year_range = [str(year) for year in range(current_year - 6, current_year+1 )]
-    end_year_range = [str(year) for year in range(current_year - 6, current_year+1 )]
-    
+    start_year_range = [str(year) for year in range(current_year - 7, current_year)]
+    end_year_range = [str(year) for year in range(current_year - 6, current_year + 1)]
+
     # Dropdown columns for selecting start date and end date
-    start_year = st.selectbox("Start Year", start_year_range)
-    end_year = st.selectbox("End Year", end_year_range)
+    start_year = st.selectbox("Start Year", start_year_range, index=len(start_year_range)-1)  # Set default to current year - 1
+    end_year = st.selectbox("End Year", end_year_range, index=len(end_year_range)-2)  # Set default to current year
     
     # Checkbox list for selecting additional options
     selected_options  = st.multiselect("Select additional options", ["Area of improvement", "Sentiment", "Strength and Weakness","Employee Performance Matrix"])

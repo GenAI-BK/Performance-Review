@@ -2,6 +2,35 @@ import sqlite3
 sql_connect = sqlite3.connect('Employee_Review.db',check_same_thread=False)
 cursor = sql_connect.cursor()
 
+def fetch_review_data():
+    # # Connect to the database
+    # conn = sqlite3.connect(database_path)
+    # cursor = conn.cursor()
+
+    # Fetch Reviewee_Name from Coworker_Reviews
+    cursor.execute("SELECT Reviewee_Name FROM Coworker_Reviews")
+    coworker_reviewees = {row[0] for row in cursor.fetchall()}
+
+    # Fetch Reviewee_Name from Manager_Reviews
+    cursor.execute("SELECT Reviewee_Name FROM Manager_Reviews")
+    manager_reviewees = {row[0] for row in cursor.fetchall()}
+
+    # Fetch Reviewee_Name from Subordinate_Reviews
+    cursor.execute("SELECT Reviewee_Name FROM Subordinate_Reviews")
+    subordinate_reviewees = {row[0] for row in cursor.fetchall()}
+
+    # Fetch Reviewer_Name from Self_Reviews
+    cursor.execute("SELECT Reviewer_Name FROM Self_Reviews")
+    self_reviewers = {row[0] for row in cursor.fetchall()}
+
+    # Close the connection
+    
+
+    # Combine all sets
+    all_reviewees = coworker_reviewees.union(manager_reviewees, subordinate_reviewees, self_reviewers)
+    # print(all_reviewees)
+    return all_reviewees
+
 # Execute each query and fetch the results for overall data
 # def data_text_overall(employee_name,start_date,end_date):
 #     queries = [
@@ -171,7 +200,7 @@ def data_text_Self(employee_name,start_date,end_date):
     return text    
 
 
-
+fetch_review_data()
 # data_text_Self("Misha Shah")    
 # name=input()
 # # data_text(name)
